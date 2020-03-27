@@ -12,8 +12,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CatalogItem {
+	//appel au service movie
 	String name;
 	String desc;
+	//appel au service Rating
 	int rating;
 
 }

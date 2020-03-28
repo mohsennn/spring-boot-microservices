@@ -1,4 +1,6 @@
-package io.javabrains.moviecatalogservice.models;
+package io.javabrains.ratingsdataservice.models;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,11 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CatalogItem {
-	//appel au  movie api
-	String name;
-	String desc;
-	//appel   Rating api
-	int rating;
+public class UserRating {
+	private List<Rating> userRating;
 
 }

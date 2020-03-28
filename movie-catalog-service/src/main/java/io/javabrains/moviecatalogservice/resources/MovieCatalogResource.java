@@ -5,6 +5,7 @@ package io.javabrains.moviecatalogservice.resources;
 import io.javabrains.moviecatalogservice.models.CatalogItem;
 import io.javabrains.moviecatalogservice.models.Movie;
 import io.javabrains.moviecatalogservice.models.Rating;
+import io.javabrains.moviecatalogservice.models.UserRating;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,35 +30,18 @@ public class MovieCatalogResource {
 	@RequestMapping("/{userId}")
 	public List<CatalogItem> getCtatlog(@PathVariable("userId") String userId) {
 
-		// RestTemplate restTemplate = new RestTemplate();
-		List<Rating> ratings = Arrays.asList(
+	/*first call to rating rest api*/
+	UserRating ratings= restTemplate.getForObject("http://localhost:8083/ratingdata/users/"+userId, UserRating.class);
 
-		new Rating("1234", 4), new Rating("5678", 5));
-
-		return ratings
-				.stream()
-				.map(rating -> {
-				  Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"+ rating.getMovieId(), Movie.class);
-					//utilisation de web client 
-					/*Movie movie = webClientBuilder.build()
-							.get()
-							.uri("http://localhost:8082/movies/"+ rating.getMovieId())
-							.retrieve()
-							.bodyToMono(Movie.class)
-							.block();
-							*/
-
-					/*
-					 * movie.getName():retourne par la 1er web service
-					 * rating.getRating():retourne pa l'appel au 2 eme
-					 * webservice RatingData Service
-					 */
-					return new CatalogItem(movie.getName(), "DESC_hardcoded",
-							rating.getRating());
+		
+		return ratings.getUserRating().stream().map(rating-> {
+			/*second call to movie rest api		 */
+	 Movie movie = restTemplate.getForObject("http://localhost:8082/movies/"+ rating.getMovieId(), Movie.class);
+				  
+				  return new CatalogItem(movie.getName(), "DESC_hardcoded",rating.getRating());
 				}).collect(Collectors.toList());
 
-		// return Collections.singletonList(new
-		// CatalogItem("Transformers","Tets", 4));
+		 
 	}
 
 }

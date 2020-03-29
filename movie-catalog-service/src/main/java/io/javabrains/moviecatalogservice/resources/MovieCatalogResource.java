@@ -4,6 +4,7 @@ import io.javabrains.moviecatalogservice.models.CatalogItem;
 import io.javabrains.moviecatalogservice.models.Movie;
 import io.javabrains.moviecatalogservice.models.UserRating;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class MovieCatalogResource {
 	private DiscoveryClient discoveryClient;
 
 	@RequestMapping("/{userId}")
-	@HystrixCommand(fallbackMethod="getFallbackCatalog")
+	@HystrixCommand(fallbackMethod = "getFallbackCatalog")
 	public List<CatalogItem> getCtatlog(@PathVariable("userId") String userId) {
 
 		UserRating ratings = restTemplate.getForObject(
@@ -48,6 +49,11 @@ public class MovieCatalogResource {
 							rating.getRating());
 				}).collect(Collectors.toList());
 
+	}
+
+	public List<CatalogItem> getFallbackCatalog(@PathVariable("userId") String userId) {
+
+		return Arrays.asList(new CatalogItem("No movie", "", 0));
 	}
 
 }

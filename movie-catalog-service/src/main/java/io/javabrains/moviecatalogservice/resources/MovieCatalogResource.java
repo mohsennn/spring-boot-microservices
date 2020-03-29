@@ -50,7 +50,7 @@ public class MovieCatalogResource {
 				}).collect(Collectors.toList());
 
 	}
-
+/*if one of the dependecies is down like "movie infoservice is down"this method will be called as default*/
 	public List<CatalogItem> getFallbackCatalog(@PathVariable("userId") String userId) {
 
 		return Arrays.asList(new CatalogItem("No movie", "", 0));
